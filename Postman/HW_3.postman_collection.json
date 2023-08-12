@@ -1,0 +1,1187 @@
+{
+	"info": {
+		"_postman_id": "709ecfa7-cfd2-4a47-bcb0-fd4cdd2c64d9",
+		"name": "HW_3",
+		"description": "# HW_3 Postman\n\n1) необходимо залогиниться  \nPOST  \n[http://162.55.220.72:5005/login]()  \nlogin : str (кроме /)  \npassword : str\n\nПриходящий токен необходимо передать во все остальные запросы.\n\n\\===================  \nдальше все запросы требуют наличие токена.  \n\\===================\n\n2) [http://162.55.220.72:5005/user_info]()  \nreq. (RAW JSON)  \nPOST  \nage: int  \nsalary: int  \nname: str  \nauth_token\n\nresp.  \n{'start_qa_salary':salary,  \n'qa_salary_after_6_months': salary \\* 2,  \n'qa_salary_after_12_months': salary \\* 2.9,  \n'person': {'u_name':\\[user_name, salary, age\\],  \n'u_age':age,  \n'u_salary_1.5_year': salary \\* 4}  \n}\n\nТесты:\n\n1) Статус код 200  \n2) Проверка структуры json в ответе.  \n3) В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент.  \n4) Достать значение из поля 'u_salary_1.5_year' и передать в поле salary запроса [http://162.55.220.72:5005/get_test_user]()  \n\\===================\n\n3) [http://162.55.220.72:5005/new_data]()  \nreq.  \nPOST  \nage: int  \nsalary: int  \nname: str  \nauth_token\n\nResp.  \n{'name':name,  \n'age': int(age),  \n'salary': \\[salary, str(salary_2), str(salary_3)\\]}\n\nТесты:\n\n1) Статус код 200  \n2) Проверка структуры json в ответе.  \n3) В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент.  \n4) проверить, что 2-й элемент массива salary больше 1-го и 0-го  \n\\===================\n\n4) [http://162.55.220.72:5005/test_pet_info]()  \nreq.  \nPOST  \nage: int  \nweight: int  \nname: str  \nauth_token\n\nResp.  \n{'name': name,  \n'age': age,  \n'daily_food':weight \\* 0.012,  \n'daily_sleep': weight \\* 2.5}\n\nТесты:\n\n1) Статус код 200  \n2) Проверка структуры json в ответе.  \n3) В ответе указаны коэффициенты умножения weight, напишите тесты по проверке правильности результата перемножения на коэффициент.\n\n\\===================\n\n5) [http://162.55.220.72:5005/get_test_user]()  \nreq.  \nPOST  \nage: int  \nsalary: int  \nname: str  \nauth_token\n\nResp.  \n{'name': name,  \n'age':age,  \n'salary': salary,  \n'family':{'children':\\[\\['Alex', 24\\],\\['Kate', 12\\]\\],  \n'u_salary_1.5_year': salary \\* 4}  \n}\n\nТесты:\n\n1) Статус код 200  \n2) Проверка структуры json в ответе.  \n3) Проверить что занчение поля name = значению переменной name из окружения  \n4) Проверить что занчение поля age в ответе соответсвует отправленному в запросе значению поля age\n\n\\===================\n\n6) [http://162.55.220.72:5005/currency]()  \nreq.  \nPOST  \nauth_token\n\nResp. Передаётся список массив объектов.  \n\\[  \n{\"Cur_Abbreviation\": str,  \n\"Cur_ID\": int,  \n\"Cur_Name\": str  \n}  \n…  \n{\"Cur_Abbreviation\": str,  \n\"Cur_ID\": int,  \n\"Cur_Name\": str  \n}  \n\\]\n\nТесты:\n\n1) Можете взять любой объект из присланного списка, используйте js random.  \nВ объекте возьмите Cur_ID и передать через окружение в следующий запрос.\n\n\\===================\n\n7) [http://162.55.220.72:5005/curr_byn]()  \nreq.  \nPOST  \nauth_token  \ncurr_code: int\n\nResp.  \n{  \n\"Cur_Abbreviation\": str  \n\"Cur_ID\": int,  \n\"Cur_Name\": str,  \n\"Cur_OfficialRate\": float,  \n\"Cur_Scale\": int,  \n\"Date\": str  \n}\n\nТесты:\n\n1) Статус код 200  \n2) Проверка структуры json в ответе.\n\n\\===============\n\n---\n\n1) получить список валют  \n2) итерировать список валют  \n3) в каждой итерации отправлять запрос на сервер для получения курса каждой валюты  \n4) если возвращается 500 код, переходим к следующей итреации  \n5) если получаем 200 код, проверяем response json на наличие поля \"Cur_OfficialRate\"  \n6) если поле есть, пишем в консоль инфу про фалюту в виде response  \n{  \n\"Cur_Abbreviation\": str  \n\"Cur_ID\": int,  \n\"Cur_Name\": str,  \n\"Cur_OfficialRate\": float,  \n\"Cur_Scale\": int,  \n\"Date\": str  \n}  \n7) переходим к следующей итерации",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26401983"
+	},
+	"item": [
+		{
+			"name": "EP_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var resp = pm.response.json()",
+							"var TOKEN = resp.token",
+							"",
+							"pm.environment.set(\"auth_token\", TOKEN)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var url = pm.environment.set('url', 'http://162.55.220.72:5005/')"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "Nikita",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "nikita1988",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}login",
+					"host": [
+						"{{url}}login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "EP_1",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "login",
+									"value": "Nikita",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "nikita1988",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}login",
+							"host": [
+								"{{url}}login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "77"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.1 Python/3.8.10"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Jul 2023 14:37:33 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"/s34lfgbj/Nikita/jjd909/62723kjkWpqc946nikita1988164248evny\"\n}"
+				}
+			]
+		},
+		{
+			"name": "EP_2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"    \"required\":[",
+							"        \"person\",",
+							"        \"qa_salary_after_12_months\",",
+							"        \"qa_salary_after_6_months\",",
+							"        \"start_qa_salary\"",
+							"    ],",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"person\": {",
+							"            \"required\": [",
+							"            \"u_age\",",
+							"            \"u_name\",",
+							"            \"u_salary_1_5_year\"",
+							"            ],",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"u_age\": {",
+							"                    \"type\": \"integer\"",
+							"                },",
+							"                \"u_name\": {",
+							"                    \"type\": \"array\",",
+							"                    \"items\":[",
+							"                        {",
+							"                        \"type\": \"string\"",
+							"                        },",
+							"                        {",
+							"                        \"type\": \"integer\"",
+							"                        },",
+							"                        {",
+							"                        \"type\": \"integer\"",
+							"                        }",
+							"                    ]",
+							"                },",
+							"                \"u_salary_1_5_year\": {",
+							"                    \"type\": \"integer\"",
+							"                }",
+							"            }",
+							"        },",
+							"    \"qa_salary_after_12_months\": {",
+							"      \"type\": \"number\"",
+							"    },",
+							"    \"qa_salary_after_6_months\": {",
+							"      \"type\": \"integer\"",
+							"    },",
+							"    \"start_qa_salary\": {",
+							"      \"type\": \"integer\"",
+							"    }",
+							"    }",
+							"}",
+							"pm.test(\"Schema validation\", function () {",
+							"    pm.response.to.have.jsonSchema(schema)",
+							"});",
+							"",
+							"var response = pm.response.json();",
+							"var qa_salary_after_12_months = response.qa_salary_after_12_months",
+							"var qa_salary_after_6_months = response.qa_salary_after_6_months",
+							"var u_salary_1_5_year = response.person.u_salary_1_5_year",
+							"pm.environment.set(\"salary_1_5_year\", u_salary_1_5_year)",
+							"",
+							"var request = JSON.parse(request.data);",
+							"var request_salary = request.salary",
+							"",
+							"pm.test(\"qa_salary_after_6_months\", function () {",
+							"    pm.expect(request_salary*2).to.eql(qa_salary_after_6_months);",
+							"});",
+							"",
+							"pm.test(\"qa_salary_after_12_months\", function () {",
+							"    pm.expect(request_salary*2.9).to.eql(qa_salary_after_12_months);",
+							"});",
+							"",
+							"pm.test(\"qa_salary_aftery_1.5_year\", function () {",
+							"    pm.expect(request_salary*4).to.eql(u_salary_1_5_year);",
+							"}); "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"age\": 34,\n    \"salary\": 1500,\n    \"name\": \"Nikita\",\n    \"auth_token\": \"{{auth_token}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}user_info",
+					"host": [
+						"{{url}}user_info"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "EP_2",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"age\": 34,\n    \"salary\": 1500,\n    \"name\": \"Nikita\",\n    \"auth_token\": \"{{auth_token}}\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}user_info",
+							"host": [
+								"{{url}}user_info"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "238"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.1 Python/3.8.10"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Jul 2023 14:37:38 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"person\": {\n        \"u_age\": 34,\n        \"u_name\": [\n            \"Nikita\",\n            1500,\n            34\n        ],\n        \"u_salary_1_5_year\": 6000\n    },\n    \"qa_salary_after_12_months\": 4350,\n    \"qa_salary_after_6_months\": 3000,\n    \"start_qa_salary\": 1500\n}"
+				}
+			]
+		},
+		{
+			"name": "EP_3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"    \"age\": {",
+							"      \"type\": \"integer\"",
+							"    },",
+							"    \"name\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"salary\": {",
+							"      \"type\": \"array\",",
+							"      \"items\": [",
+							"        {",
+							"          \"type\": \"integer\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        }",
+							"      ]",
+							"    }",
+							"  },",
+							"  \"required\": [",
+							"    \"age\",",
+							"    \"name\",",
+							"    \"salary\"",
+							"  ]",
+							"}",
+							"",
+							"pm.test(\"Schema validation\", function () {",
+							"    pm.response.to.have.jsonSchema(schema)",
+							"});",
+							"",
+							"var response = pm.response.json();",
+							"var request = request.data;",
+							"",
+							"",
+							"var resp_salary_1 = +response.salary[0]",
+							"var resp_salary_2 = +response.salary[1]",
+							"var resp_salary_3 = +response.salary[2]",
+							"",
+							"pm.test(\"Salary * 2\", function () {",
+							"    pm.expect(+request.salary*2).to.eql(+resp_salary_2);",
+							"});",
+							"",
+							"pm.test(\"Salary * 3\", function () {",
+							"    pm.expect(+request.salary*3).to.eql(+resp_salary_3);",
+							"});",
+							"",
+							"pm.test(\"salary[2] > salary[0] and salary[2] > salary[1]\", function(){",
+							"    pm.expect(resp_salary_3)>(resp_salary_2)",
+							"    pm.expect(resp_salary_2)>(resp_salary_1)",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "34",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Nikita",
+							"type": "text"
+						},
+						{
+							"key": "salary",
+							"value": "1500",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{TOKEN}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}new_data",
+					"host": [
+						"{{url}}new_data"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "EP_3",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "age",
+									"value": "34",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Nikita",
+									"type": "text"
+								},
+								{
+									"key": "salary",
+									"value": "1500",
+									"type": "text"
+								},
+								{
+									"key": "auth_token",
+									"value": "{{TOKEN}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}new_data",
+							"host": [
+								"{{url}}new_data"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "92"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.1 Python/3.8.10"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Jul 2023 14:37:42 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"age\": 34,\n    \"name\": \"Nikita\",\n    \"salary\": [\n        1500,\n        \"3000\",\n        \"4500\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "EP_4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"    \"age\": {",
+							"      \"type\": \"integer\"",
+							"    },",
+							"    \"daily_food\": {",
+							"      \"type\": \"number\"",
+							"    },",
+							"    \"daily_sleep\": {",
+							"      \"type\": \"number\"",
+							"    },",
+							"    \"name\": {",
+							"      \"type\": \"string\"",
+							"    }",
+							"  },",
+							"  \"required\": [",
+							"    \"age\",",
+							"    \"daily_food\",",
+							"    \"daily_sleep\",",
+							"    \"name\"",
+							"  ]",
+							"}",
+							"",
+							"pm.test(\"Schema validation\", function () {",
+							"    pm.response.to.have.jsonSchema(schema)",
+							"});",
+							"",
+							"var request = request.data",
+							"var weight = +request.weight",
+							"",
+							"var response = pm.response.json();",
+							"var daily_food_r = +response.daily_food",
+							"var daily_sleep_r = +response.daily_sleep",
+							"",
+							"pm.test(\"Ratio of daily_food\", function(){",
+							"    pm.expect(weight * 0.012).to.eql(daily_food_r);",
+							"});",
+							"",
+							"pm.test(\"Ratio of daily_sleep\", function(){",
+							"    pm.expect(weight * 2.5).to.eql(daily_sleep_r)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "34",
+							"type": "text"
+						},
+						{
+							"key": "weight",
+							"value": "84",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{auth_token}}}",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Nikita",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}test_pet_info",
+					"host": [
+						"{{url}}test_pet_info"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "EP_4",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "age",
+									"value": "34",
+									"type": "text"
+								},
+								{
+									"key": "weight",
+									"value": "84",
+									"type": "text"
+								},
+								{
+									"key": "auth_token",
+									"value": "{{auth_token}}}",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Nikita",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}test_pet_info",
+							"host": [
+								"{{url}}test_pet_info"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "86"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.1 Python/3.8.10"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Jul 2023 14:37:46 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"age\": 34,\n    \"daily_food\": 1.008,\n    \"daily_sleep\": 210,\n    \"name\": \"Nikita\"\n}"
+				}
+			]
+		},
+		{
+			"name": "EP_5",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"    \"age\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"family\": {",
+							"      \"type\": \"object\",",
+							"      \"properties\": {",
+							"        \"children\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [",
+							"            {",
+							"              \"type\": \"array\",",
+							"              \"items\": [",
+							"                {",
+							"                  \"type\": \"string\"",
+							"                },",
+							"                {",
+							"                  \"type\": \"integer\"",
+							"                }",
+							"              ]",
+							"            },",
+							"            {",
+							"              \"type\": \"array\",",
+							"              \"items\": [",
+							"                {",
+							"                  \"type\": \"string\"",
+							"                },",
+							"                {",
+							"                  \"type\": \"integer\"",
+							"                }",
+							"              ]",
+							"            }",
+							"          ]",
+							"        },",
+							"        \"u_salary_1_5_year\": {",
+							"          \"type\": \"integer\"",
+							"        }",
+							"      },",
+							"      \"required\": [",
+							"        \"children\",",
+							"        \"u_salary_1_5_year\"",
+							"      ]",
+							"    },",
+							"    \"name\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"salary\": {",
+							"      \"type\": \"integer\"",
+							"    }",
+							"  },",
+							"  \"required\": [",
+							"    \"age\",",
+							"    \"family\",",
+							"    \"name\",",
+							"    \"salary\"",
+							"  ]",
+							"}",
+							"",
+							"pm.test(\"Schema validation\", function () {",
+							"    pm.response.to.have.jsonSchema(schema)",
+							"});",
+							"",
+							"",
+							"var name_req = request.data.name",
+							"var age_req = request.data.age",
+							"",
+							"var name_resp = pm.response.json().name",
+							"var age_resp = pm.response.json().age",
+							"",
+							"pm.test(\"Equil name resp and req\", function(){",
+							"    pm.expect(name_req).to.eql(name_resp)",
+							"});",
+							"",
+							"pm.test(\"Equil age resp and req\", function(){",
+							"    pm.expect(age_req).to.eql(age_resp)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "age",
+							"value": "34",
+							"type": "text"
+						},
+						{
+							"key": "salary",
+							"value": "1500",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Nikita",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{auth_token}}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}get_test_user",
+					"host": [
+						"{{url}}get_test_user"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "EP_5",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "age",
+									"value": "34",
+									"type": "text"
+								},
+								{
+									"key": "salary",
+									"value": "1500",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Nikita",
+									"type": "text"
+								},
+								{
+									"key": "auth_token",
+									"value": "{{auth_token}}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}get_test_user",
+							"host": [
+								"{{url}}get_test_user"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "224"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.1 Python/3.8.10"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Jul 2023 14:37:51 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"age\": \"34\",\n    \"family\": {\n        \"children\": [\n            [\n                \"Alex\",\n                24\n            ],\n            [\n                \"Kate\",\n                12\n            ]\n        ],\n        \"u_salary_1_5_year\": 6000\n    },\n    \"name\": \"Nikita\",\n    \"salary\": 1500\n}"
+				}
+			]
+		},
+		{
+			"name": "EP_6",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response.json()",
+							"var index = Math.trunc(Math.random() * response.length);",
+							"var item = response[index];",
+							"console.log(item)",
+							"var cur_code = item.Cur_ID",
+							"pm.environment.set(\"cur_code\", cur_code)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "auth_token",
+							"value": "{{auth_token}}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://54.157.99.22:80/currency",
+					"protocol": "http",
+					"host": [
+						"54",
+						"157",
+						"99",
+						"22"
+					],
+					"port": "80",
+					"path": [
+						"currency"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "EP_6",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "auth_token",
+									"value": "{{auth_token}}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://54.157.99.22:80/currency",
+							"protocol": "http",
+							"host": [
+								"54",
+								"157",
+								"99",
+								"22"
+							],
+							"port": "80",
+							"path": [
+								"currency"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "nginx/1.18.0 (Ubuntu)"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Jul 2023 14:37:55 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "8202"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"Cur_Abbreviation\": \"USD\",\n        \"Cur_ID\": 0,\n        \"Cur_Name\": \"US dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CAD\",\n        \"Cur_ID\": 1,\n        \"Cur_Name\": \"Canadian dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"EUR\",\n        \"Cur_ID\": 2,\n        \"Cur_Name\": \"euros\"\n    },\n    {\n        \"Cur_Abbreviation\": \"AED\",\n        \"Cur_ID\": 3,\n        \"Cur_Name\": \"UAE dirhams\"\n    },\n    {\n        \"Cur_Abbreviation\": \"AFN\",\n        \"Cur_ID\": 4,\n        \"Cur_Name\": \"Afghan Afghanis\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ALL\",\n        \"Cur_ID\": 5,\n        \"Cur_Name\": \"Albanian lekë\"\n    },\n    {\n        \"Cur_Abbreviation\": \"AMD\",\n        \"Cur_ID\": 6,\n        \"Cur_Name\": \"Armenian drams\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ARS\",\n        \"Cur_ID\": 7,\n        \"Cur_Name\": \"Argentine pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"AUD\",\n        \"Cur_ID\": 8,\n        \"Cur_Name\": \"Australian dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"AZN\",\n        \"Cur_ID\": 9,\n        \"Cur_Name\": \"Azerbaijani manats\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BAM\",\n        \"Cur_ID\": 10,\n        \"Cur_Name\": \"Bosnia-Herzegovina convertible marks\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BDT\",\n        \"Cur_ID\": 11,\n        \"Cur_Name\": \"Bangladeshi takas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BGN\",\n        \"Cur_ID\": 12,\n        \"Cur_Name\": \"Bulgarian leva\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BHD\",\n        \"Cur_ID\": 13,\n        \"Cur_Name\": \"Bahraini dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BIF\",\n        \"Cur_ID\": 14,\n        \"Cur_Name\": \"Burundian francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BND\",\n        \"Cur_ID\": 15,\n        \"Cur_Name\": \"Brunei dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BOB\",\n        \"Cur_ID\": 16,\n        \"Cur_Name\": \"Bolivian bolivianos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BRL\",\n        \"Cur_ID\": 17,\n        \"Cur_Name\": \"Brazilian reals\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BWP\",\n        \"Cur_ID\": 18,\n        \"Cur_Name\": \"Botswanan pulas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BYN\",\n        \"Cur_ID\": 19,\n        \"Cur_Name\": \"Belarusian rubles\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BZD\",\n        \"Cur_ID\": 20,\n        \"Cur_Name\": \"Belize dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CDF\",\n        \"Cur_ID\": 21,\n        \"Cur_Name\": \"Congolese francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CHF\",\n        \"Cur_ID\": 22,\n        \"Cur_Name\": \"Swiss francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CLP\",\n        \"Cur_ID\": 23,\n        \"Cur_Name\": \"Chilean pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CNY\",\n        \"Cur_ID\": 24,\n        \"Cur_Name\": \"Chinese yuan\"\n    },\n    {\n        \"Cur_Abbreviation\": \"COP\",\n        \"Cur_ID\": 25,\n        \"Cur_Name\": \"Colombian pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CRC\",\n        \"Cur_ID\": 26,\n        \"Cur_Name\": \"Costa Rican colóns\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CVE\",\n        \"Cur_ID\": 27,\n        \"Cur_Name\": \"Cape Verdean escudos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CZK\",\n        \"Cur_ID\": 28,\n        \"Cur_Name\": \"Czech Republic korunas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"DJF\",\n        \"Cur_ID\": 29,\n        \"Cur_Name\": \"Djiboutian francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"DKK\",\n        \"Cur_ID\": 30,\n        \"Cur_Name\": \"Danish kroner\"\n    },\n    {\n        \"Cur_Abbreviation\": \"DOP\",\n        \"Cur_ID\": 31,\n        \"Cur_Name\": \"Dominican pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"DZD\",\n        \"Cur_ID\": 32,\n        \"Cur_Name\": \"Algerian dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"EEK\",\n        \"Cur_ID\": 33,\n        \"Cur_Name\": \"Estonian kroons\"\n    },\n    {\n        \"Cur_Abbreviation\": \"EGP\",\n        \"Cur_ID\": 34,\n        \"Cur_Name\": \"Egyptian pounds\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ERN\",\n        \"Cur_ID\": 35,\n        \"Cur_Name\": \"Eritrean nakfas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ETB\",\n        \"Cur_ID\": 36,\n        \"Cur_Name\": \"Ethiopian birrs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"GBP\",\n        \"Cur_ID\": 37,\n        \"Cur_Name\": \"British pounds sterling\"\n    },\n    {\n        \"Cur_Abbreviation\": \"GEL\",\n        \"Cur_ID\": 38,\n        \"Cur_Name\": \"Georgian laris\"\n    },\n    {\n        \"Cur_Abbreviation\": \"GHS\",\n        \"Cur_ID\": 39,\n        \"Cur_Name\": \"Ghanaian cedis\"\n    },\n    {\n        \"Cur_Abbreviation\": \"GNF\",\n        \"Cur_ID\": 40,\n        \"Cur_Name\": \"Guinean francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"GTQ\",\n        \"Cur_ID\": 41,\n        \"Cur_Name\": \"Guatemalan quetzals\"\n    },\n    {\n        \"Cur_Abbreviation\": \"HKD\",\n        \"Cur_ID\": 42,\n        \"Cur_Name\": \"Hong Kong dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"HNL\",\n        \"Cur_ID\": 43,\n        \"Cur_Name\": \"Honduran lempiras\"\n    },\n    {\n        \"Cur_Abbreviation\": \"HRK\",\n        \"Cur_ID\": 44,\n        \"Cur_Name\": \"Croatian kunas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"HUF\",\n        \"Cur_ID\": 45,\n        \"Cur_Name\": \"Hungarian forints\"\n    },\n    {\n        \"Cur_Abbreviation\": \"IDR\",\n        \"Cur_ID\": 46,\n        \"Cur_Name\": \"Indonesian rupiahs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ILS\",\n        \"Cur_ID\": 47,\n        \"Cur_Name\": \"Israeli new sheqels\"\n    },\n    {\n        \"Cur_Abbreviation\": \"INR\",\n        \"Cur_ID\": 48,\n        \"Cur_Name\": \"Indian rupees\"\n    },\n    {\n        \"Cur_Abbreviation\": \"IQD\",\n        \"Cur_ID\": 49,\n        \"Cur_Name\": \"Iraqi dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"IRR\",\n        \"Cur_ID\": 50,\n        \"Cur_Name\": \"Iranian rials\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ISK\",\n        \"Cur_ID\": 51,\n        \"Cur_Name\": \"Icelandic krónur\"\n    },\n    {\n        \"Cur_Abbreviation\": \"JMD\",\n        \"Cur_ID\": 52,\n        \"Cur_Name\": \"Jamaican dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"JOD\",\n        \"Cur_ID\": 53,\n        \"Cur_Name\": \"Jordanian dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"JPY\",\n        \"Cur_ID\": 54,\n        \"Cur_Name\": \"Japanese yen\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KES\",\n        \"Cur_ID\": 55,\n        \"Cur_Name\": \"Kenyan shillings\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KHR\",\n        \"Cur_ID\": 56,\n        \"Cur_Name\": \"Cambodian riels\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KMF\",\n        \"Cur_ID\": 57,\n        \"Cur_Name\": \"Comorian francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KRW\",\n        \"Cur_ID\": 58,\n        \"Cur_Name\": \"South Korean won\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KWD\",\n        \"Cur_ID\": 59,\n        \"Cur_Name\": \"Kuwaiti dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KZT\",\n        \"Cur_ID\": 60,\n        \"Cur_Name\": \"Kazakhstani tenges\"\n    },\n    {\n        \"Cur_Abbreviation\": \"LBP\",\n        \"Cur_ID\": 61,\n        \"Cur_Name\": \"Lebanese pounds\"\n    },\n    {\n        \"Cur_Abbreviation\": \"LKR\",\n        \"Cur_ID\": 62,\n        \"Cur_Name\": \"Sri Lankan rupees\"\n    },\n    {\n        \"Cur_Abbreviation\": \"LTL\",\n        \"Cur_ID\": 63,\n        \"Cur_Name\": \"Lithuanian litai\"\n    },\n    {\n        \"Cur_Abbreviation\": \"LVL\",\n        \"Cur_ID\": 64,\n        \"Cur_Name\": \"Latvian lati\"\n    },\n    {\n        \"Cur_Abbreviation\": \"LYD\",\n        \"Cur_ID\": 65,\n        \"Cur_Name\": \"Libyan dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MAD\",\n        \"Cur_ID\": 66,\n        \"Cur_Name\": \"Moroccan dirhams\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MDL\",\n        \"Cur_ID\": 67,\n        \"Cur_Name\": \"Moldovan lei\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MGA\",\n        \"Cur_ID\": 68,\n        \"Cur_Name\": \"Malagasy Ariaries\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MKD\",\n        \"Cur_ID\": 69,\n        \"Cur_Name\": \"Macedonian denari\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MMK\",\n        \"Cur_ID\": 70,\n        \"Cur_Name\": \"Myanma kyats\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MOP\",\n        \"Cur_ID\": 71,\n        \"Cur_Name\": \"Macanese patacas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MUR\",\n        \"Cur_ID\": 72,\n        \"Cur_Name\": \"Mauritian rupees\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MXN\",\n        \"Cur_ID\": 73,\n        \"Cur_Name\": \"Mexican pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MYR\",\n        \"Cur_ID\": 74,\n        \"Cur_Name\": \"Malaysian ringgits\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MZN\",\n        \"Cur_ID\": 75,\n        \"Cur_Name\": \"Mozambican meticals\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NAD\",\n        \"Cur_ID\": 76,\n        \"Cur_Name\": \"Namibian dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NGN\",\n        \"Cur_ID\": 77,\n        \"Cur_Name\": \"Nigerian nairas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NIO\",\n        \"Cur_ID\": 78,\n        \"Cur_Name\": \"Nicaraguan córdobas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NOK\",\n        \"Cur_ID\": 79,\n        \"Cur_Name\": \"Norwegian kroner\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NPR\",\n        \"Cur_ID\": 80,\n        \"Cur_Name\": \"Nepalese rupees\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NZD\",\n        \"Cur_ID\": 81,\n        \"Cur_Name\": \"New Zealand dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"OMR\",\n        \"Cur_ID\": 82,\n        \"Cur_Name\": \"Omani rials\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PAB\",\n        \"Cur_ID\": 83,\n        \"Cur_Name\": \"Panamanian balboas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PEN\",\n        \"Cur_ID\": 84,\n        \"Cur_Name\": \"Peruvian nuevos soles\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PHP\",\n        \"Cur_ID\": 85,\n        \"Cur_Name\": \"Philippine pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PKR\",\n        \"Cur_ID\": 86,\n        \"Cur_Name\": \"Pakistani rupees\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PLN\",\n        \"Cur_ID\": 87,\n        \"Cur_Name\": \"Polish zlotys\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PYG\",\n        \"Cur_ID\": 88,\n        \"Cur_Name\": \"Paraguayan guaranis\"\n    },\n    {\n        \"Cur_Abbreviation\": \"QAR\",\n        \"Cur_ID\": 89,\n        \"Cur_Name\": \"Qatari rials\"\n    },\n    {\n        \"Cur_Abbreviation\": \"RON\",\n        \"Cur_ID\": 90,\n        \"Cur_Name\": \"Romanian lei\"\n    },\n    {\n        \"Cur_Abbreviation\": \"RSD\",\n        \"Cur_ID\": 91,\n        \"Cur_Name\": \"Serbian dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"RUB\",\n        \"Cur_ID\": 92,\n        \"Cur_Name\": \"Russian rubles\"\n    },\n    {\n        \"Cur_Abbreviation\": \"RWF\",\n        \"Cur_ID\": 93,\n        \"Cur_Name\": \"Rwandan francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SAR\",\n        \"Cur_ID\": 94,\n        \"Cur_Name\": \"Saudi riyals\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SDG\",\n        \"Cur_ID\": 95,\n        \"Cur_Name\": \"Sudanese pounds\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SEK\",\n        \"Cur_ID\": 96,\n        \"Cur_Name\": \"Swedish kronor\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SGD\",\n        \"Cur_ID\": 97,\n        \"Cur_Name\": \"Singapore dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SOS\",\n        \"Cur_ID\": 98,\n        \"Cur_Name\": \"Somali shillings\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SYP\",\n        \"Cur_ID\": 99,\n        \"Cur_Name\": \"Syrian pounds\"\n    },\n    {\n        \"Cur_Abbreviation\": \"THB\",\n        \"Cur_ID\": 100,\n        \"Cur_Name\": \"Thai baht\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TND\",\n        \"Cur_ID\": 101,\n        \"Cur_Name\": \"Tunisian dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TOP\",\n        \"Cur_ID\": 102,\n        \"Cur_Name\": \"Tongan paʻanga\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TRY\",\n        \"Cur_ID\": 103,\n        \"Cur_Name\": \"Turkish Lira\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TTD\",\n        \"Cur_ID\": 104,\n        \"Cur_Name\": \"Trinidad and Tobago dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TWD\",\n        \"Cur_ID\": 105,\n        \"Cur_Name\": \"New Taiwan dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TZS\",\n        \"Cur_ID\": 106,\n        \"Cur_Name\": \"Tanzanian shillings\"\n    },\n    {\n        \"Cur_Abbreviation\": \"UAH\",\n        \"Cur_ID\": 107,\n        \"Cur_Name\": \"Ukrainian hryvnias\"\n    },\n    {\n        \"Cur_Abbreviation\": \"UGX\",\n        \"Cur_ID\": 108,\n        \"Cur_Name\": \"Ugandan shillings\"\n    },\n    {\n        \"Cur_Abbreviation\": \"UYU\",\n        \"Cur_ID\": 109,\n        \"Cur_Name\": \"Uruguayan pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"UZS\",\n        \"Cur_ID\": 110,\n        \"Cur_Name\": \"Uzbekistan som\"\n    },\n    {\n        \"Cur_Abbreviation\": \"VEF\",\n        \"Cur_ID\": 111,\n        \"Cur_Name\": \"Venezuelan bolívars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"VND\",\n        \"Cur_ID\": 112,\n        \"Cur_Name\": \"Vietnamese dong\"\n    },\n    {\n        \"Cur_Abbreviation\": \"XAF\",\n        \"Cur_ID\": 113,\n        \"Cur_Name\": \"CFA francs BEAC\"\n    },\n    {\n        \"Cur_Abbreviation\": \"XOF\",\n        \"Cur_ID\": 114,\n        \"Cur_Name\": \"CFA francs BCEAO\"\n    },\n    {\n        \"Cur_Abbreviation\": \"YER\",\n        \"Cur_ID\": 115,\n        \"Cur_Name\": \"Yemeni rials\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ZAR\",\n        \"Cur_ID\": 116,\n        \"Cur_Name\": \"South African rand\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ZMK\",\n        \"Cur_ID\": 117,\n        \"Cur_Name\": \"Zambian kwachas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ZWL\",\n        \"Cur_ID\": 118,\n        \"Cur_Name\": \"Zimbabwean Dollar\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "EP_7",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"    \"Cur_Abbreviation\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"Cur_ID\": {",
+							"      \"type\": \"integer\"",
+							"    },",
+							"    \"Cur_Name\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"Cur_OfficialRate\": {",
+							"      \"type\": \"number\"",
+							"    },",
+							"    \"Cur_Scale\": {",
+							"      \"type\": \"integer\"",
+							"    },",
+							"    \"Date\": {",
+							"      \"type\": \"string\"",
+							"    }",
+							"  },",
+							"  \"required\": [",
+							"    \"Cur_Abbreviation\",",
+							"    \"Cur_ID\",",
+							"    \"Cur_Name\",",
+							"    \"Cur_OfficialRate\",",
+							"    \"Cur_Scale\",",
+							"    \"Date\"",
+							"  ]",
+							"}",
+							"pm.test(\"Schema validation\", function () {",
+							"    pm.response.to.have.jsonSchema(schema)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "auth_token",
+							"value": "{{auth_token}}",
+							"type": "text"
+						},
+						{
+							"key": "curr_code",
+							"value": "{{cur_code}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://54.157.99.22:80/curr_byn",
+					"protocol": "http",
+					"host": [
+						"54",
+						"157",
+						"99",
+						"22"
+					],
+					"port": "80",
+					"path": [
+						"curr_byn"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "EP_7",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "auth_token",
+									"value": "{{auth_token}}",
+									"type": "text"
+								},
+								{
+									"key": "curr_code",
+									"value": "{{cur_code}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://54.157.99.22:80/curr_byn",
+							"protocol": "http",
+							"host": [
+								"54",
+								"157",
+								"99",
+								"22"
+							],
+							"port": "80",
+							"path": [
+								"curr_byn"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "nginx/1.18.0 (Ubuntu)"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Jul 2023 14:27:12 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "134"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Cur_Abbreviation\": \"USD\",\n    \"Cur_ID\": 0,\n    \"Cur_Name\": \"US dollars\",\n    \"Cur_OfficialRate\": 51.68373195232875,\n    \"Cur_Scale\": 96,\n    \"Date\": \"2023-07-30\"\n}"
+				}
+			]
+		},
+		{
+			"name": "EP_8",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var token = pm.environment.get(\"auth_token\")",
+							"var resp = pm.response.json()",
+							"var arr_len = resp.length",
+							"console.log(arr_len)",
+							"for(let i = 0; i < arr_len; i++){",
+							"    var cur_name = resp[i].Cur_Name",
+							"    var cur_id = resp[i].Cur_ID",
+							"    console.log(cur_id)",
+							"    console.log(cur_name)",
+							"    const regRequest = {",
+							"        'method': 'POST',",
+							"        'url': 'http://54.157.99.22:80/curr_byn',",
+							"        'body': {",
+							"            'mode': 'formdata',",
+							"            'formdata': [",
+							"                {'key': 'auth_token', 'value': token},",
+							"                {'key': 'curr_code', 'value': cur_id.toString()}",
+							"            ]",
+							"        }",
+							"    }",
+							"    pm.sendRequest(regRequest, (error, response) => {",
+							"        if(response.code == 200){",
+							"            var resp_1 = response.json();",
+							"            if(pm.expect(resp_1).have.to.property(\"Cur_OfficialRate\")){",
+							"                console.log(resp_1)",
+							"            };",
+							"        }",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "auth_token",
+							"value": "{{auth_token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://54.157.99.22:80/currency",
+					"protocol": "http",
+					"host": [
+						"54",
+						"157",
+						"99",
+						"22"
+					],
+					"port": "80",
+					"path": [
+						"currency"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "EP_8",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "auth_token",
+									"value": "{{auth_token}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://54.157.99.22:80/currency",
+							"protocol": "http",
+							"host": [
+								"54",
+								"157",
+								"99",
+								"22"
+							],
+							"port": "80",
+							"path": [
+								"currency"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "nginx/1.18.0 (Ubuntu)"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Jul 2023 14:38:40 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "8202"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"Cur_Abbreviation\": \"USD\",\n        \"Cur_ID\": 0,\n        \"Cur_Name\": \"US dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CAD\",\n        \"Cur_ID\": 1,\n        \"Cur_Name\": \"Canadian dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"EUR\",\n        \"Cur_ID\": 2,\n        \"Cur_Name\": \"euros\"\n    },\n    {\n        \"Cur_Abbreviation\": \"AED\",\n        \"Cur_ID\": 3,\n        \"Cur_Name\": \"UAE dirhams\"\n    },\n    {\n        \"Cur_Abbreviation\": \"AFN\",\n        \"Cur_ID\": 4,\n        \"Cur_Name\": \"Afghan Afghanis\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ALL\",\n        \"Cur_ID\": 5,\n        \"Cur_Name\": \"Albanian lekë\"\n    },\n    {\n        \"Cur_Abbreviation\": \"AMD\",\n        \"Cur_ID\": 6,\n        \"Cur_Name\": \"Armenian drams\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ARS\",\n        \"Cur_ID\": 7,\n        \"Cur_Name\": \"Argentine pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"AUD\",\n        \"Cur_ID\": 8,\n        \"Cur_Name\": \"Australian dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"AZN\",\n        \"Cur_ID\": 9,\n        \"Cur_Name\": \"Azerbaijani manats\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BAM\",\n        \"Cur_ID\": 10,\n        \"Cur_Name\": \"Bosnia-Herzegovina convertible marks\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BDT\",\n        \"Cur_ID\": 11,\n        \"Cur_Name\": \"Bangladeshi takas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BGN\",\n        \"Cur_ID\": 12,\n        \"Cur_Name\": \"Bulgarian leva\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BHD\",\n        \"Cur_ID\": 13,\n        \"Cur_Name\": \"Bahraini dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BIF\",\n        \"Cur_ID\": 14,\n        \"Cur_Name\": \"Burundian francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BND\",\n        \"Cur_ID\": 15,\n        \"Cur_Name\": \"Brunei dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BOB\",\n        \"Cur_ID\": 16,\n        \"Cur_Name\": \"Bolivian bolivianos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BRL\",\n        \"Cur_ID\": 17,\n        \"Cur_Name\": \"Brazilian reals\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BWP\",\n        \"Cur_ID\": 18,\n        \"Cur_Name\": \"Botswanan pulas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BYN\",\n        \"Cur_ID\": 19,\n        \"Cur_Name\": \"Belarusian rubles\"\n    },\n    {\n        \"Cur_Abbreviation\": \"BZD\",\n        \"Cur_ID\": 20,\n        \"Cur_Name\": \"Belize dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CDF\",\n        \"Cur_ID\": 21,\n        \"Cur_Name\": \"Congolese francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CHF\",\n        \"Cur_ID\": 22,\n        \"Cur_Name\": \"Swiss francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CLP\",\n        \"Cur_ID\": 23,\n        \"Cur_Name\": \"Chilean pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CNY\",\n        \"Cur_ID\": 24,\n        \"Cur_Name\": \"Chinese yuan\"\n    },\n    {\n        \"Cur_Abbreviation\": \"COP\",\n        \"Cur_ID\": 25,\n        \"Cur_Name\": \"Colombian pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CRC\",\n        \"Cur_ID\": 26,\n        \"Cur_Name\": \"Costa Rican colóns\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CVE\",\n        \"Cur_ID\": 27,\n        \"Cur_Name\": \"Cape Verdean escudos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"CZK\",\n        \"Cur_ID\": 28,\n        \"Cur_Name\": \"Czech Republic korunas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"DJF\",\n        \"Cur_ID\": 29,\n        \"Cur_Name\": \"Djiboutian francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"DKK\",\n        \"Cur_ID\": 30,\n        \"Cur_Name\": \"Danish kroner\"\n    },\n    {\n        \"Cur_Abbreviation\": \"DOP\",\n        \"Cur_ID\": 31,\n        \"Cur_Name\": \"Dominican pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"DZD\",\n        \"Cur_ID\": 32,\n        \"Cur_Name\": \"Algerian dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"EEK\",\n        \"Cur_ID\": 33,\n        \"Cur_Name\": \"Estonian kroons\"\n    },\n    {\n        \"Cur_Abbreviation\": \"EGP\",\n        \"Cur_ID\": 34,\n        \"Cur_Name\": \"Egyptian pounds\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ERN\",\n        \"Cur_ID\": 35,\n        \"Cur_Name\": \"Eritrean nakfas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ETB\",\n        \"Cur_ID\": 36,\n        \"Cur_Name\": \"Ethiopian birrs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"GBP\",\n        \"Cur_ID\": 37,\n        \"Cur_Name\": \"British pounds sterling\"\n    },\n    {\n        \"Cur_Abbreviation\": \"GEL\",\n        \"Cur_ID\": 38,\n        \"Cur_Name\": \"Georgian laris\"\n    },\n    {\n        \"Cur_Abbreviation\": \"GHS\",\n        \"Cur_ID\": 39,\n        \"Cur_Name\": \"Ghanaian cedis\"\n    },\n    {\n        \"Cur_Abbreviation\": \"GNF\",\n        \"Cur_ID\": 40,\n        \"Cur_Name\": \"Guinean francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"GTQ\",\n        \"Cur_ID\": 41,\n        \"Cur_Name\": \"Guatemalan quetzals\"\n    },\n    {\n        \"Cur_Abbreviation\": \"HKD\",\n        \"Cur_ID\": 42,\n        \"Cur_Name\": \"Hong Kong dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"HNL\",\n        \"Cur_ID\": 43,\n        \"Cur_Name\": \"Honduran lempiras\"\n    },\n    {\n        \"Cur_Abbreviation\": \"HRK\",\n        \"Cur_ID\": 44,\n        \"Cur_Name\": \"Croatian kunas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"HUF\",\n        \"Cur_ID\": 45,\n        \"Cur_Name\": \"Hungarian forints\"\n    },\n    {\n        \"Cur_Abbreviation\": \"IDR\",\n        \"Cur_ID\": 46,\n        \"Cur_Name\": \"Indonesian rupiahs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ILS\",\n        \"Cur_ID\": 47,\n        \"Cur_Name\": \"Israeli new sheqels\"\n    },\n    {\n        \"Cur_Abbreviation\": \"INR\",\n        \"Cur_ID\": 48,\n        \"Cur_Name\": \"Indian rupees\"\n    },\n    {\n        \"Cur_Abbreviation\": \"IQD\",\n        \"Cur_ID\": 49,\n        \"Cur_Name\": \"Iraqi dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"IRR\",\n        \"Cur_ID\": 50,\n        \"Cur_Name\": \"Iranian rials\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ISK\",\n        \"Cur_ID\": 51,\n        \"Cur_Name\": \"Icelandic krónur\"\n    },\n    {\n        \"Cur_Abbreviation\": \"JMD\",\n        \"Cur_ID\": 52,\n        \"Cur_Name\": \"Jamaican dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"JOD\",\n        \"Cur_ID\": 53,\n        \"Cur_Name\": \"Jordanian dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"JPY\",\n        \"Cur_ID\": 54,\n        \"Cur_Name\": \"Japanese yen\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KES\",\n        \"Cur_ID\": 55,\n        \"Cur_Name\": \"Kenyan shillings\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KHR\",\n        \"Cur_ID\": 56,\n        \"Cur_Name\": \"Cambodian riels\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KMF\",\n        \"Cur_ID\": 57,\n        \"Cur_Name\": \"Comorian francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KRW\",\n        \"Cur_ID\": 58,\n        \"Cur_Name\": \"South Korean won\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KWD\",\n        \"Cur_ID\": 59,\n        \"Cur_Name\": \"Kuwaiti dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"KZT\",\n        \"Cur_ID\": 60,\n        \"Cur_Name\": \"Kazakhstani tenges\"\n    },\n    {\n        \"Cur_Abbreviation\": \"LBP\",\n        \"Cur_ID\": 61,\n        \"Cur_Name\": \"Lebanese pounds\"\n    },\n    {\n        \"Cur_Abbreviation\": \"LKR\",\n        \"Cur_ID\": 62,\n        \"Cur_Name\": \"Sri Lankan rupees\"\n    },\n    {\n        \"Cur_Abbreviation\": \"LTL\",\n        \"Cur_ID\": 63,\n        \"Cur_Name\": \"Lithuanian litai\"\n    },\n    {\n        \"Cur_Abbreviation\": \"LVL\",\n        \"Cur_ID\": 64,\n        \"Cur_Name\": \"Latvian lati\"\n    },\n    {\n        \"Cur_Abbreviation\": \"LYD\",\n        \"Cur_ID\": 65,\n        \"Cur_Name\": \"Libyan dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MAD\",\n        \"Cur_ID\": 66,\n        \"Cur_Name\": \"Moroccan dirhams\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MDL\",\n        \"Cur_ID\": 67,\n        \"Cur_Name\": \"Moldovan lei\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MGA\",\n        \"Cur_ID\": 68,\n        \"Cur_Name\": \"Malagasy Ariaries\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MKD\",\n        \"Cur_ID\": 69,\n        \"Cur_Name\": \"Macedonian denari\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MMK\",\n        \"Cur_ID\": 70,\n        \"Cur_Name\": \"Myanma kyats\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MOP\",\n        \"Cur_ID\": 71,\n        \"Cur_Name\": \"Macanese patacas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MUR\",\n        \"Cur_ID\": 72,\n        \"Cur_Name\": \"Mauritian rupees\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MXN\",\n        \"Cur_ID\": 73,\n        \"Cur_Name\": \"Mexican pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MYR\",\n        \"Cur_ID\": 74,\n        \"Cur_Name\": \"Malaysian ringgits\"\n    },\n    {\n        \"Cur_Abbreviation\": \"MZN\",\n        \"Cur_ID\": 75,\n        \"Cur_Name\": \"Mozambican meticals\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NAD\",\n        \"Cur_ID\": 76,\n        \"Cur_Name\": \"Namibian dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NGN\",\n        \"Cur_ID\": 77,\n        \"Cur_Name\": \"Nigerian nairas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NIO\",\n        \"Cur_ID\": 78,\n        \"Cur_Name\": \"Nicaraguan córdobas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NOK\",\n        \"Cur_ID\": 79,\n        \"Cur_Name\": \"Norwegian kroner\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NPR\",\n        \"Cur_ID\": 80,\n        \"Cur_Name\": \"Nepalese rupees\"\n    },\n    {\n        \"Cur_Abbreviation\": \"NZD\",\n        \"Cur_ID\": 81,\n        \"Cur_Name\": \"New Zealand dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"OMR\",\n        \"Cur_ID\": 82,\n        \"Cur_Name\": \"Omani rials\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PAB\",\n        \"Cur_ID\": 83,\n        \"Cur_Name\": \"Panamanian balboas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PEN\",\n        \"Cur_ID\": 84,\n        \"Cur_Name\": \"Peruvian nuevos soles\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PHP\",\n        \"Cur_ID\": 85,\n        \"Cur_Name\": \"Philippine pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PKR\",\n        \"Cur_ID\": 86,\n        \"Cur_Name\": \"Pakistani rupees\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PLN\",\n        \"Cur_ID\": 87,\n        \"Cur_Name\": \"Polish zlotys\"\n    },\n    {\n        \"Cur_Abbreviation\": \"PYG\",\n        \"Cur_ID\": 88,\n        \"Cur_Name\": \"Paraguayan guaranis\"\n    },\n    {\n        \"Cur_Abbreviation\": \"QAR\",\n        \"Cur_ID\": 89,\n        \"Cur_Name\": \"Qatari rials\"\n    },\n    {\n        \"Cur_Abbreviation\": \"RON\",\n        \"Cur_ID\": 90,\n        \"Cur_Name\": \"Romanian lei\"\n    },\n    {\n        \"Cur_Abbreviation\": \"RSD\",\n        \"Cur_ID\": 91,\n        \"Cur_Name\": \"Serbian dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"RUB\",\n        \"Cur_ID\": 92,\n        \"Cur_Name\": \"Russian rubles\"\n    },\n    {\n        \"Cur_Abbreviation\": \"RWF\",\n        \"Cur_ID\": 93,\n        \"Cur_Name\": \"Rwandan francs\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SAR\",\n        \"Cur_ID\": 94,\n        \"Cur_Name\": \"Saudi riyals\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SDG\",\n        \"Cur_ID\": 95,\n        \"Cur_Name\": \"Sudanese pounds\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SEK\",\n        \"Cur_ID\": 96,\n        \"Cur_Name\": \"Swedish kronor\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SGD\",\n        \"Cur_ID\": 97,\n        \"Cur_Name\": \"Singapore dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SOS\",\n        \"Cur_ID\": 98,\n        \"Cur_Name\": \"Somali shillings\"\n    },\n    {\n        \"Cur_Abbreviation\": \"SYP\",\n        \"Cur_ID\": 99,\n        \"Cur_Name\": \"Syrian pounds\"\n    },\n    {\n        \"Cur_Abbreviation\": \"THB\",\n        \"Cur_ID\": 100,\n        \"Cur_Name\": \"Thai baht\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TND\",\n        \"Cur_ID\": 101,\n        \"Cur_Name\": \"Tunisian dinars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TOP\",\n        \"Cur_ID\": 102,\n        \"Cur_Name\": \"Tongan paʻanga\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TRY\",\n        \"Cur_ID\": 103,\n        \"Cur_Name\": \"Turkish Lira\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TTD\",\n        \"Cur_ID\": 104,\n        \"Cur_Name\": \"Trinidad and Tobago dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TWD\",\n        \"Cur_ID\": 105,\n        \"Cur_Name\": \"New Taiwan dollars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"TZS\",\n        \"Cur_ID\": 106,\n        \"Cur_Name\": \"Tanzanian shillings\"\n    },\n    {\n        \"Cur_Abbreviation\": \"UAH\",\n        \"Cur_ID\": 107,\n        \"Cur_Name\": \"Ukrainian hryvnias\"\n    },\n    {\n        \"Cur_Abbreviation\": \"UGX\",\n        \"Cur_ID\": 108,\n        \"Cur_Name\": \"Ugandan shillings\"\n    },\n    {\n        \"Cur_Abbreviation\": \"UYU\",\n        \"Cur_ID\": 109,\n        \"Cur_Name\": \"Uruguayan pesos\"\n    },\n    {\n        \"Cur_Abbreviation\": \"UZS\",\n        \"Cur_ID\": 110,\n        \"Cur_Name\": \"Uzbekistan som\"\n    },\n    {\n        \"Cur_Abbreviation\": \"VEF\",\n        \"Cur_ID\": 111,\n        \"Cur_Name\": \"Venezuelan bolívars\"\n    },\n    {\n        \"Cur_Abbreviation\": \"VND\",\n        \"Cur_ID\": 112,\n        \"Cur_Name\": \"Vietnamese dong\"\n    },\n    {\n        \"Cur_Abbreviation\": \"XAF\",\n        \"Cur_ID\": 113,\n        \"Cur_Name\": \"CFA francs BEAC\"\n    },\n    {\n        \"Cur_Abbreviation\": \"XOF\",\n        \"Cur_ID\": 114,\n        \"Cur_Name\": \"CFA francs BCEAO\"\n    },\n    {\n        \"Cur_Abbreviation\": \"YER\",\n        \"Cur_ID\": 115,\n        \"Cur_Name\": \"Yemeni rials\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ZAR\",\n        \"Cur_ID\": 116,\n        \"Cur_Name\": \"South African rand\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ZMK\",\n        \"Cur_ID\": 117,\n        \"Cur_Name\": \"Zambian kwachas\"\n    },\n    {\n        \"Cur_Abbreviation\": \"ZWL\",\n        \"Cur_ID\": 118,\n        \"Cur_Name\": \"Zimbabwean Dollar\"\n    }\n]"
+				}
+			]
+		}
+	]
+}

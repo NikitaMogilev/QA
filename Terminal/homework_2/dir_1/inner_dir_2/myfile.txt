@@ -1,0 +1,23 @@
+commit be7a167428fc8e1c15e1dda8a5b2b43586538d59
+Author: NikitaMogilev <nikitamogilev0@gmail.com>
+Date:   Sun Jun 25 17:39:20 2023 +0300
+
+    added steps for hw2
+
+commit 49c13983a85ead3793dd791dc9991bcae3ec7ffe
+Author: NikitaMogilev <nikitamogilev0@gmail.com>
+Date:   Wed Jun 21 21:36:21 2023 +0300
+
+    Improve point 9
+
+commit 7236024173139be91d0c9d0d73f35d35434dc8a4
+Author: NikitaMogilev <nikitamogilev0@gmail.com>
+Date:   Wed Jun 14 01:13:59 2023 +0300
+
+    Complete HW1
+
+commit 98446ffd29857097a170edb2023ea82e3de9e9dd
+Author: NikitaMogilev <118761882+NikitaMogilev@users.noreply.github.com>
+Date:   Wed Jun 14 00:59:50 2023 +0300
+
+    Initial commit
