@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<req>
+<name_surname name="Nikita_Mogilev">
+<Age>34</Age>
+<pets_number>1</pets_number>
+<expected_salary>"1500$"</expected_salary>
+</name_surname>
+</req>
