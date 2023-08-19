@@ -1,13 +1,4 @@
 1. open page www....
 2. click login in 
 .....
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-11
->>>>>>> CheckLists
-=======
 
-11
-
->>>>>>> b6382cbc344f0039d36ce89aee5bdabb57c197e9
